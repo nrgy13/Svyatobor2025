@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const reviews = [
   {
@@ -76,11 +77,13 @@ export default function ReviewsSection() {
                   className="forest-card h-full flex flex-col relative"
                 >
                   <div className="flex items-center mb-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
-                      <img 
+                    <div className="w-16 h-16 rounded-full overflow-hidden mr-4 relative">
+                      <Image 
                         src={review.avatar} 
                         alt={review.name}
-                        className="w-full h-full object-cover" 
+                        fill
+                        className="object-cover"
+                        sizes="64px"
                       />
                     </div>
                     <div>
@@ -118,11 +121,13 @@ export default function ReviewsSection() {
                   <div key={index} className="w-full flex-shrink-0 px-2">
                     <div className="forest-card h-full flex flex-col relative">
                       <div className="flex items-center mb-4">
-                        <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
-                          <img 
+                        <div className="w-16 h-16 rounded-full overflow-hidden mr-4 relative">
+                          <Image 
                             src={review.avatar} 
                             alt={review.name}
-                            className="w-full h-full object-cover" 
+                            fill
+                            className="object-cover"
+                            sizes="64px"
                           />
                         </div>
                         <div>

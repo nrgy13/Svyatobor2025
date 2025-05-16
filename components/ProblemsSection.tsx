@@ -3,6 +3,7 @@
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { ThumbsDown, Bug } from 'lucide-react';
+import Image from 'next/image';
 
 const problems = [
   {
@@ -77,10 +78,12 @@ export default function ProblemsSection() {
             transition={{ duration: 0.8 }}
             className="relative rounded-lg overflow-hidden shadow-xl h-[400px] md:h-[500px]"
           >
-            <img 
+            <Image 
               src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/problem-image.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvcHJvYmxlbS1pbWFnZS5qcGciLCJpYXQiOjE3NDY3MTEwODcsImV4cCI6MTc3ODI0NzA4N30.-FO4cP0XVwW6imzP_q8_ERqsygmeHZONwCPvz3ZGi0g" 
               alt="Заросший участок" 
-              className="w-full h-full object-cover" 
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
             <div className="absolute inset-0 bg-black/20"></div>
           </motion.div>

@@ -2,7 +2,8 @@
 
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
-import { Tractor, RussianRuble } from 'lucide-react'; // Import RussianRuble
+import { Tractor, RussianRuble } from 'lucide-react';
+import Image from 'next/image';
 
 const advantages = [
   {
@@ -56,7 +57,7 @@ const advantages = [
     description: "Официальное оформление всех отношений с клиентами и гарантия на выполненные работы."
   },
   {
-    icon: <RussianRuble className="h-10 w-10" />, // Replaced with RussianRuble
+    icon: <RussianRuble className="h-10 w-10" />,
     title: "Доступные цены",
     description: "Оптимальное соотношение цены и качества. Индивидуальный подход к каждому клиенту."
   }
@@ -127,10 +128,12 @@ export default function AdvantagesSection() {
             transition={{ duration: 0.8 }}
             className="relative rounded-lg overflow-hidden shadow-xl h-[500px]"
           >
-            <img 
+            <Image 
               src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/advantages-image.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvYWR2YW50YWdlcy1pbWFnZS5qcGciLCJpYXQiOjE3NDY3MTA0MTMsImV4cCI6MTc3ODI0NjQxM30.TK2iqWfjf0K0l4hEC_MgVPEhjn-ANOWutA8udEnTyDo" 
               alt="Наши преимущества" 
-              className="w-full h-full object-cover" 
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
             <div className="absolute inset-0 bg-forest-green/10"></div>
           </motion.div>
@@ -153,7 +156,7 @@ export default function AdvantagesSection() {
                 </div>
                 <h3 className="text-xl font-semibold text-wood-brown mb-2">{advantage.title}</h3>
                 <p className="text-gray-700">{advantage.description}</p>
-                </motion.div>
+              </motion.div>
             ))}
           </motion.div>
         </div>

@@ -5,6 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Trees, Scissors, SprayCan } from 'lucide-react';
+import Image from 'next/image';
 
 const services = [
   {
@@ -97,10 +98,12 @@ export default function ServicesSection() {
                 <div key={index} className="w-full flex-shrink-0">
                   <div className="grid grid-cols-1 md:grid-cols-2">
                     <div className="relative h-64 md:h-auto">
-                      <img 
+                      <Image 
                         src={service.image} 
                         alt={service.title} 
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                       <div className="absolute inset-0 bg-black/30"></div>
                     </div>

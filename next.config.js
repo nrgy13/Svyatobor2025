@@ -6,7 +6,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['images.pexels.com'],
+    domains: ['ytbtznozmjlifztitlas.supabase.co'],
     unoptimized: true
   }
 };
