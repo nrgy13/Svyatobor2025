@@ -97,7 +97,7 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center md:opacity-100 opacity-0 transition-opacity duration-300">
         <span className="text-white mb-2">Прокрутите вниз</span>
         <motion.div
           animate={{ y: [0, 10, 0] }}
