@@ -33,7 +33,7 @@ const reviews = [
     age: 41,
     location: "Новороссийск",
     text: "Обратилась для расчистки участка от травы и мелких кустарников. Всё сделали за один день, цена полностью соответствовала изначальной договоренности, без дополнительных платежей. Понравилась прозрачность в работе и внимание к деталям. В следующем сезоне обязательно обращусь снова.",
-    avatar: "/images/client-4.jpg",
+    avatar: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/client-4.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvY2xpZW50LTQuanBnIiwiaWF0IjoxNzQ3MDQxNTk0LCJleHAiOjE3Nzg1Nzc1OTR9.Ue2iqWfjf0K0l4hEC_MgVPEhjn-ANOWutA8udEnTyDo",
   },
 ];
 
