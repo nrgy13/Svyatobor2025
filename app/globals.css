@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 245, 241, 230;
+  --background-end-rgb: 255, 255, 255;
+
+  /* Forest Theme Colors */
+  --color-forest-green: 44, 85, 48;
+  --color-moss-green: 95, 141, 78;
+  --color-light-moss: 180, 195, 151;
+  --color-wood-brown: 94, 75, 59;
+  --color-light-brown: 150, 111, 51;
+  --color-warm-beige: 245, 241, 230;
+  --color-fog-white: 250, 250, 250;
+}
+
+@layer base {
+  :root {
+    --background: 38 33% 97%;
+    --foreground: 44 42% 9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 44 42% 9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 44 42% 9%;
+    
+    --primary: 136 33% 26%;
+    --primary-foreground: 38 33% 97%;
+    
+    --secondary: 28 30% 30%;
+    --secondary-foreground: 38 33% 97%;
+    
+    --muted: 38 33% 92%;
+    --muted-foreground: 44 9% 45%;
+    
+    --accent: 50 55% 80%;
+    --accent-foreground: 44 42% 9%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 38 33% 97%;
+    
+    --border: 44 9% 85%;
+    --input: 44 9% 85%;
+    --ring: 136 33% 26%;
+    
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 44 42% 9%;
+    --foreground: 38 33% 97%;
+    
+    --card: 44 42% 9%;
+    --card-foreground: 38 33% 97%;
+    
+    --popover: 44 42% 9%;
+    --popover-foreground: 38 33% 97%;
+    
+    --primary: 136 33% 46%;
+    --primary-foreground: 44 42% 9%;
+    
+    --secondary: 28 30% 50%;
+    --secondary-foreground: 44 42% 9%;
+    
+    --muted: 44 42% 14%;
+    --muted-foreground: 38 33% 70%;
+    
+    --accent: 50 55% 50%;
+    --accent-foreground: 44 42% 9%;
+    
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 38 33% 97%;
+    
+    --border: 44 42% 14%;
+    --input: 44 42% 14%;
+    --ring: 136 33% 46%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-montserrat);
+    background-color: rgb(var(--background-start-rgb));
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-montserrat);
+  }
+}
+
+/* Custom classes */
+.text-shadow {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.section-heading {
+  @apply text-4xl md:text-5xl text-forest-green mb-6 text-center;
+  font-family: var(--font-montserrat);
+  position: relative;
+}
+
+.section-subheading {
+  @apply text-xl md:text-2xl text-wood-brown mb-10 text-center max-w-3xl mx-auto;
+}
+
+.forest-card {
+  @apply bg-white rounded-lg shadow-md p-6 relative overflow-hidden transition-all duration-300;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--background-start-rgb));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-forest-green), 0.7);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--color-forest-green), 1);
+}
