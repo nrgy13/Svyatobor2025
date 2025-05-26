@@ -54,7 +54,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex flex-col items-center md:items-start"
+                className="flex flex-col items-center"
               >
                 <motion.div 
                   className="relative w-64 h-64 md:w-80 md:h-80 mb-6"
@@ -72,7 +72,7 @@ export default function HeroSection() {
                   />
                 </motion.div>
                 <motion.h2 
-                  className="text-warm-beige text-2xl md:text-3xl font-correiria mb-4 text-center md:text-left"
+                  className="text-warm-beige text-2xl md:text-3xl font-correiria mb-4 text-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.7 }}
