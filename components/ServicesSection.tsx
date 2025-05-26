@@ -6,30 +6,31 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Trees, Scissors, SprayCan } from 'lucide-react';
 import Image from 'next/image';
+import { IMAGES } from '@/lib/constants';
 
 const services = [
   {
     title: "Удаление деревьев и кустарников",
     description: "Профессиональное удаление деревьев и кустарников любой сложности с использованием специального оборудования.",
-    image: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/service-trees.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3Ivc2VydmljZS10cmVlcy5qcGciLCJpYXQiOjE3NDY3MTE1MjAsImV4cCI6MTc3ODI0NzUyMH0.U_-IgTbvBgVaYge2j-8TxON_9LO-055qFOe_3pnpjWM",
+    image: IMAGES.SERVICE_TREES,
     icon: <Trees className="h-8 w-8" />
   },
   {
     title: "Покос травы",
     description: "Покос травы и борьба с сорняками на участках любой площади с помощью современной техники.",
-    image: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/service-grass.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3Ivc2VydmljZS1ncmFzcy5qcGciLCJpYXQiOjE3NDY3MTEyNzAsImV4cCI6MTc3ODI0NzI3MH0.vZuuAvIM9WEOv0bf0L_5drBz2x_oe2emYNoPRWIUm0k",
+    image: IMAGES.SERVICE_GRASS,
     icon: <Scissors className="h-8 w-8" />
   },
   {
     title: "Обработка растений от вредителей",
     description: "Профессиональная обработка участка от вредителей и болезней растений с гарантией эффективности.",
-    image: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/service-spraying.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3Ivc2VydmljZS1zcHJheWluZy5qcGciLCJpYXQiOjE3NDY3MTE0MzksImV4cCI6MTc3ODI0NzQzOX0.SSblUGBcOE5VtCgQvvRNBsTNjdhxcNRmp7wXxlok9d4",
+    image: IMAGES.SERVICE_SPRAYING,
     icon: <SprayCan className="h-8 w-8" />
   },
   {
     title: "Вывоз и утилизация растительных остатков",
     description: "Полный цикл очистки участка с вывозом и экологичной утилизацией всех растительных остатков.",
-    image: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/service-removal.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3Ivc2VydmljZS1yZW1vdmFsLmpwZyIsImlhdCI6MTc0NjcxMTM1MywiZXhwIjoxNzc4MjQ3MzUzfQ.mmAehStSLOrcuRrFmcPu3L2FkNiByt4hfIJuTPl58i0",
+    image: IMAGES.SERVICE_REMOVAL,
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -39,7 +40,7 @@ const services = [
   {
     title: "Подготовка участка под строительство",
     description: "Комплексная подготовка земельного участка перед началом строительных работ с планировкой территории.",
-    image: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/service-construction.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3Ivc2VydmljZS1jb25zdHJ1Y3Rpb24uanBnIiwiaWF0IjoxNzQ2NzExMTc4LCJleHAiOjE3NzgyNDcxNzh9.sOS--xE48OSAeQs5JkgqCrdoxD0DoKf6ZlJS6duftIE",
+    image: IMAGES.SERVICE_CONSTRUCTION,
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
