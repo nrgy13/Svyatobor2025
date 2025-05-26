@@ -98,18 +98,19 @@ export default function ServicesSection() {
               {services.map((service, index) => (
                 <div key={index} className="w-full flex-shrink-0">
                   <div className="grid grid-cols-1 md:grid-cols-2">
-                    <div className="relative h-64 md:h-auto">
+                    <div className="relative h-[400px] md:h-[500px]">
                       <Image 
                         src={service.image} 
                         alt={service.title} 
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 50vw"
+                        priority={index === 0}
                       />
                       <div className="absolute inset-0 bg-black/30"></div>
                     </div>
 
-                    <div className="bg-white p-8 md:p-12 flex flex-col justify-center">
+                    <div className="bg-white p-8 md:p-12 flex flex-col justify-center h-[400px] md:h-[500px]">
                       <div className="bg-forest-green/10 p-3 rounded-full w-16 h-16 flex items-center justify-center mb-6 text-forest-green">
                         {service.icon}
                       </div>
