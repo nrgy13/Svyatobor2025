@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { correiria, montserrat } from '@/lib/fonts';
 import { Toaster } from '@/components/ui/sonner';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export const metadata: Metadata = {
   title: 'Святобор | Расчистка участков от деревьев, кустов, травы',
@@ -24,6 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${montserrat.variable} ${correiria.variable}`}>
+        <LoadingScreen />
         {children}
         <Toaster position="top-center" />
       </body>
