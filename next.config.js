@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'export',
   images: {
-    domains: ['images.pexels.com', 'ytbtznozmjlifztitlas.supabase.co'],
+    domains: ['ytbtznozmjlifztitlas.supabase.co'],
     unoptimized: true
   },
   webpack: (config, { dev }) => {
