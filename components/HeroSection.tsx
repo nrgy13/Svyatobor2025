@@ -5,6 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
+import { IMAGES } from '@/lib/constants';
 
 export default function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -28,7 +29,7 @@ export default function HeroSection() {
         <div 
           className="absolute inset-0 bg-center bg-cover"
           style={{ 
-            backgroundImage: "url('/images/hero-bg.jpg')",
+            backgroundImage: `url('${IMAGES.HERO_BG}')`,
             filter: "brightness(0.7)",
             transition: "transform 0.5s ease-out",
             transform: isLoaded ? "scale(1)" : "scale(1.1)",
@@ -48,7 +49,7 @@ export default function HeroSection() {
           >
             <div className="relative w-64 h-64 md:w-80 md:h-80 mb-6">
               <Image 
-                src="/images/logo.png"
+                src={IMAGES.LOGO_CIRCLE}
                 alt="Логотип Святобор"
                 width={320}
                 height={320}

@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { ThumbsDown, Bug } from 'lucide-react';
 import Image from 'next/image';
+import { IMAGES } from '@/lib/constants';
 
 const problems = [
   {
@@ -79,7 +80,7 @@ export default function ProblemsSection() {
             className="relative rounded-lg overflow-hidden shadow-xl h-[400px] md:h-[500px]"
           >
             <Image 
-              src="/images/problem-image.jpg"
+              src={IMAGES.PROBLEM}
               alt="Заросший участок" 
               fill
               className="object-cover"

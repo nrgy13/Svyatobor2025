@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { Tractor, RussianRuble } from 'lucide-react';
 import Image from 'next/image';
+import { IMAGES } from '@/lib/constants';
 
 const advantages = [
   {
@@ -129,7 +130,7 @@ export default function AdvantagesSection() {
             className="relative rounded-lg overflow-hidden shadow-xl h-[500px]"
           >
             <Image 
-              src="/images/advantages-image.jpg"
+              src={IMAGES.ADVANTAGES}
               alt="Наши преимущества" 
               fill
               className="object-cover"

@@ -3,6 +3,7 @@
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
+import { IMAGES } from '@/lib/constants';
 
 export default function ResultsSection() {
   const { ref, inView } = useInView({
@@ -17,7 +18,7 @@ export default function ResultsSection() {
         <div 
           className="absolute inset-0 bg-center bg-cover"
           style={{ 
-            backgroundImage: "url('/images/result-bg.jpg')",
+            backgroundImage: `url('${IMAGES.RESULT_BG}')`,
             filter: "brightness(0.7)",
           }}
         />

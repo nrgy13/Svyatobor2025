@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { IMAGES } from '@/lib/constants';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,7 +30,7 @@ export default function Header() {
         {/* Logo */}
         <a href="#hero" className="flex items-center">
           <Image 
-            src="/images/logo.png"
+            src={IMAGES.LOGO}
             alt="Святобор" 
             width={50} 
             height={50} 
@@ -116,7 +117,7 @@ export default function Header() {
         <div className="flex justify-between items-center p-4 border-b border-moss-green">
           <a href="#hero" className="flex items-center">
             <Image 
-              src="/images/logo.png"
+              src={IMAGES.LOGO}
               alt="Святобор" 
               width={40} 
               height={40} 
