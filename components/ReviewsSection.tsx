@@ -5,6 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { IMAGES } from '@/lib/constants';
 
 const reviews = [
   {
@@ -12,28 +13,28 @@ const reviews = [
     age: 52,
     location: "Новороссийск",
     text: "Обратился в компанию для расчистки участка под строительство дома. Территория была сильно заросшей, множество кустарников и несколько больших деревьев. Бригада справилась за два дня, очень качественно. Впечатлила слаженность в работе и профессиональный подход. Рекомендую!",
-    avatar: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/client-1.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvY2xpZW50LTEuanBnIiwiaWF0IjoxNzQ3MDQxNTA2LCJleHAiOjE3Nzg1Nzc1MDZ9.K9w4wVCVDkNVeH8J_37g-bIEyO7WCz57j0BOPo5UteE",
+    avatar: IMAGES.CLIENT_1,
   },
   {
     name: "Марина Васильевна",
     age: 38,
     location: "п. Гайдук",
     text: "Долго не могла найти специалистов для расчистки дачного участка. Нашла Святобор через знакомых, и очень довольна результатом. Приехали в оговоренное время, убрали всю поросль и сухостой, обработали участок от вредителей. Сделали всё аккуратно, без повреждения забора и соседних насаждений.",
-    avatar: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/client-2.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvY2xpZW50LTIuanBnIiwiaWF0IjoxNzQ3MDQxNTUxLCJleHAiOjE3Nzg1Nzc1NTF9.BEqJmFQukhrBhj7RdXc4kVlewmfZCniDgB3HluTjlQw",
+    avatar: IMAGES.CLIENT_2,
   },
   {
     name: "Игорь Александрович",
     age: 44,
     location: "п. Абрау-Дюрсо",
     text: "Заказывал комплексную расчистку запущенного участка. Работали быстро и качественно, вывезли весь мусор. Отдельное спасибо за рекомендации по дальнейшему уходу за участком. После работы специалистов участок просто не узнать! Теперь буду обращаться к ним регулярно для поддержания порядка.",
-    avatar: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/client-3.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvY2xpZW50LTMuanBnIiwiaWF0IjoxNzQ3MDQxNTczLCJleHAiOjE3Nzg1Nzc1NzN9.Ui2eyeJ_ngfGvVr9l7CwHC8aEVi_ScuW8uFPYEYWl30",
+    avatar: IMAGES.CLIENT_3,
   },
   {
     name: "Елена Сергеевна",
     age: 41,
     location: "Новороссийск",
     text: "Обратилась для расчистки участка от травы и мелких кустарников. Всё сделали за один день, цена полностью соответствовала изначальной договоренности, без дополнительных платежей. Понравилась прозрачность в работе и внимание к деталям. В следующем сезоне обязательно обращусь снова.",
-    avatar: "https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/client-4.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvY2xpZW50LTQuanBnIiwiaWF0IjoxNzQ3MDQxNTk0LCJleHAiOjE3Nzg1Nzc1OTR9.Ue2iqWfjf0K0l4hEC_MgVPEhjn-ANOWutA8udEnTyDo",
+    avatar: IMAGES.CLIENT_4,
   },
 ];
 
