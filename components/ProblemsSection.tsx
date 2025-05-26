@@ -79,7 +79,7 @@ export default function ProblemsSection() {
             className="relative rounded-lg overflow-hidden shadow-xl h-[400px] md:h-[500px]"
           >
             <Image 
-              src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/problem-image.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvcHJvYmxlbS1pbWFnZS5qcGciLCJpYXQiOjE3NDY3MTEwODcsImV4cCI6MTc3ODI0NzA4N30.-FO4cP0XVwW6imzP_q8_ERqsygmeHZONwCPvz3ZGi0g" 
+              src="/images/problem-image.jpg"
               alt="Заросший участок" 
               fill
               className="object-cover"

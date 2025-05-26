@@ -129,7 +129,7 @@ export default function AdvantagesSection() {
             className="relative rounded-lg overflow-hidden shadow-xl h-[500px]"
           >
             <Image 
-              src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/advantages-image.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvYWR2YW50YWdlcy1pbWFnZS5qcGciLCJpYXQiOjE3NDY3MTA0MTMsImV4cCI6MTc3ODI0NjQxM30.TK2iqWfjf0K0l4hEC_MgVPEhjn-ANOWutA8udEnTyDo" 
+              src="/images/advantages-image.jpg"
               alt="Наши преимущества" 
               fill
               className="object-cover"

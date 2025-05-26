@@ -28,7 +28,7 @@ export default function HeroSection() {
         <div 
           className="absolute inset-0 bg-center bg-cover"
           style={{ 
-            backgroundImage: "url('https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/hero-bg.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvaGVyby1iZy5qcGciLCJpYXQiOjE3NDY3MTA3NjksImV4cCI6MTc3ODI0Njc2OX0.mOhalXKPQlPwOlz7wReETMNIgrYJIZIpVoJ5qLbs6qY')",
+            backgroundImage: "url('/images/hero-bg.jpg')",
             filter: "brightness(0.7)",
             transition: "transform 0.5s ease-out",
             transform: isLoaded ? "scale(1)" : "scale(1.1)",
@@ -48,7 +48,7 @@ export default function HeroSection() {
           >
             <div className="relative w-64 h-64 md:w-80 md:h-80 mb-6">
               <Image 
-                src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/logo-circle.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvbG9nby1jaXJjbGUucG5nIiwiaWF0IjoxNzQ2NzEwODgwLCJleHAiOjE3NzgyNDY4ODB9.xmwA5LbL9_NiTR-kgnnu0f6yt32RS-ek4uEn5IbBz_U"
+                src="/images/logo.png"
                 alt="Логотип Святобор"
                 width={320}
                 height={320}

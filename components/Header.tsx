@@ -29,7 +29,7 @@ export default function Header() {
         {/* Logo */}
         <a href="#hero" className="flex items-center">
           <Image 
-            src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/logo.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvbG9nby5wbmciLCJpYXQiOjE3NDY3MTEwMjQsImV4cCI6MTc3ODI0NzAyNH0.aAA0AdchKCQhmuImVofGRCaLsgIL93v-LK8sbfoFLP8" 
+            src="/images/logo.png"
             alt="Святобор" 
             width={50} 
             height={50} 
@@ -116,7 +116,7 @@ export default function Header() {
         <div className="flex justify-between items-center p-4 border-b border-moss-green">
           <a href="#hero" className="flex items-center">
             <Image 
-              src="https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/logo.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvbG9nby5wbmciLCJpYXQiOjE3NDY3MTEwMjQsImV4cCI6MTc3ODI0NzAyNH0.aAA0AdchKCQhmuImVofGRCaLsgIL93v-LK8sbfoFLP8" 
+              src="/images/logo.png"
               alt="Святобор" 
               width={40} 
               height={40} 

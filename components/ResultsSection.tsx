@@ -17,7 +17,7 @@ export default function ResultsSection() {
         <div 
           className="absolute inset-0 bg-center bg-cover"
           style={{ 
-            backgroundImage: "url('https://ytbtznozmjlifztitlas.supabase.co/storage/v1/object/sign/svyatobor/result-bg.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0b3JhZ2UtdXJsLXNpZ25pbmcta2V5XzYzZmI0NGNiLWJmYjktNGRjYi05ZDJjLTg3OWY1OTdlMzE2MyJ9.eyJ1cmwiOiJzdnlhdG9ib3IvcmVzdWx0LWJnLmpwZyIsImlhdCI6MTc0NjcxMTgzOCwiZXhwIjoxNzc4MjQ3ODM4fQ.cgiDS_39JUoiAEo7Dwc98Ze5J9lSdn_FD51gCr2zSdY')",
+            backgroundImage: "url('/images/result-bg.jpg')",
             filter: "brightness(0.7)",
           }}
         />
