@@ -1,19 +1,29 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  trailingSlash: true,
   images: {
-    domains: ['ytbtznozmjlifztitlas.supabase.co'],
     unoptimized: true,
-    // Добавляем конфигурацию для приоритетной загрузки
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'bvuagbjdedtfmvitrfpa.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
-  webpack: (config, { dev }) => {
-    // Disable filesystem cache to prevent ENOENT errors
-    config.cache = false;
-    return config;
-  }
+  // Оптимизации для продакшена
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@supabase/supabase-js', 'lucide-react'],
+  },
+  // Настройки для статического хостинга Timeweb
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '' : '',
 };
 
 module.exports = nextConfig;

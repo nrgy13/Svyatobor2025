@@ -80,7 +80,7 @@ export default function ProblemsSection() {
             className="relative rounded-lg overflow-hidden shadow-xl h-[400px] md:h-[500px]"
           >
             <Image 
-              src={IMAGES.PROBLEM}
+              src={IMAGES.PROBLEM_IMAGE}
               alt="Заросший участок" 
               fill
               className="object-cover"

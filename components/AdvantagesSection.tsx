@@ -130,7 +130,7 @@ export default function AdvantagesSection() {
             className="relative rounded-lg overflow-hidden shadow-xl h-[500px]"
           >
             <Image 
-              src={IMAGES.ADVANTAGES}
+              src={IMAGES.ADVANTAGES_IMAGE}
               alt="Наши преимущества" 
               fill
               className="object-cover"
