@@ -1,0 +1,78 @@
+{
+  "name": "svyatobor-landing",
+  "version": "1.0.0",
+  "description": "Landing page для Svyatobor с деплоем на Timeweb",
+  "build": {
+    "command": "npm run build",
+    "outputDirectory": "out",
+    "environment": {
+      "NODE_ENV": "production",
+      "NEXT_PUBLIC_SUPABASE_URL": "${SUPABASE_URL}",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "${SUPABASE_ANON_KEY}"
+    }
+  },
+  "hosting": {
+    "type": "static",
+    "domain": "your-domain.ru",
+    "ssl": true,
+    "cache": {
+      "enabled": true,
+      "maxAge": {
+        "html": 3600,
+        "css": 86400,
+        "js": 86400,
+        "images": 2592000,
+        "fonts": 31536000
+      }
+    },
+    "compression": {
+      "gzip": true,
+      "brotli": true
+    }
+  },
+  "optimization": {
+    "minify": true,
+    "bundleAnalyzer": false,
+    "removeConsole": true,
+    "optimizeImages": true
+  },
+  "monitoring": {
+    "enabled": false,
+    "healthCheck": "/health",
+    "uptimeRobot": {
+      "enabled": false,
+      "url": "https://your-domain.ru/health"
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "schedule": "daily",
+    "retention": 7
+  },
+  "security": {
+    "headers": {
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://bvuagbjdedtfmvitrfpa.supabase.co"
+    },
+    "ssl": {
+      "forceHttps": true,
+      "hsts": true
+    }
+  },
+  "deployment": {
+    "autoDeploy": true,
+    "branch": "main",
+    "notifications": {
+      "email": true,
+      "telegram": false
+    }
+  },
+  "scripts": {
+    "preDeploy": "npm run lint",
+    "postDeploy": "echo 'Деплой завершен успешно'",
+    "healthCheck": "curl -f https://your-domain.ru/ || exit 1"
+  }
+}
