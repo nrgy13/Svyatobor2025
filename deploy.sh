@@ -125,6 +125,97 @@ fi
 
 echo -e "${GREEN}✅ Деплой файлов завершен успешно!${NC}"
 
+# Деплой изображений
+echo -e "${YELLOW}🖼️  Загружаю изображения на сервер...${NC}"
+
+# Создание структуры папок изображений на сервере
+if [ ! -z "$SSH_HOST" ] && [ ! -z "$SSH_USER" ]; then
+    echo -e "${BLUE}📁 Создаю структуру папок изображений на сервере...${NC}"
+
+    # Создаем необходимые директории для изображений
+    ssh $SSH_USER@$SSH_HOST "mkdir -p $REMOTE_PATH/images"
+    ssh $SSH_USER@$SSH_HOST "mkdir -p $REMOTE_PATH/public/images"
+
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ Структура папок изображений создана${NC}"
+    else
+        echo -e "${RED}❌ Ошибка при создании структуры папок изображений${NC}"
+        exit 1
+    fi
+
+    # Загружаем изображения из локальной папки images/
+    if [ -d "images" ]; then
+        echo -e "${BLUE}📤 Загружаю изображения из папки images/...${NC}"
+        rsync -avz -e "ssh $SSH_OPTS" --delete images/ $SSH_USER@$SSH_HOST:$REMOTE_PATH/images/
+
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}✅ Изображения из папки images/ загружены успешно${NC}"
+        else
+            echo -e "${RED}❌ Ошибка при загрузке изображений из папки images/${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${YELLOW}⚠️  Локальная папка images/ не найдена${NC}"
+    fi
+
+    # Загружаем изображения из локальной папки public/images/
+    if [ -d "public/images" ]; then
+        echo -e "${BLUE}📤 Загружаю изображения из папки public/images/...${NC}"
+        rsync -avz -e "ssh $SSH_OPTS" --delete public/images/ $SSH_USER@$SSH_HOST:$REMOTE_PATH/public/images/
+
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}✅ Изображения из папки public/images/ загружены успешно${NC}"
+        else
+            echo -e "${RED}❌ Ошибка при загрузке изображений из папки public/images/${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${YELLOW}⚠️  Локальная папка public/images/ не найдена${NC}"
+    fi
+
+    # Настройка прав доступа к изображениям
+    echo -e "${BLUE}🔐 Настраиваю права доступа к изображениям...${NC}"
+    ssh $SSH_USER@$SSH_HOST "chmod -R 755 $REMOTE_PATH/images"
+    ssh $SSH_USER@$SSH_HOST "chmod -R 755 $REMOTE_PATH/public/images"
+
+    # Проверяем, что изображения загружены корректно
+    echo -e "${BLUE}🔍 Проверяю загрузку изображений...${NC}"
+
+    # Проверяем количество изображений на сервере
+    SERVER_IMAGES_COUNT=$(ssh $SSH_USER@$SSH_HOST "find $REMOTE_PATH/images -type f -name '*.jpg' -o -name '*.png' -o -name '*.jpeg' -o -name '*.gif' -o -name '*.webp' | wc -l")
+    SERVER_PUBLIC_IMAGES_COUNT=$(ssh $SSH_USER@$SSH_HOST "find $REMOTE_PATH/public/images -type f -name '*.jpg' -o -name '*.png' -o -name '*.jpeg' -o -name '*.gif' -o -name '*.webp' | wc -l")
+
+    echo -e "${GREEN}📊 Изображений на сервере: $SERVER_IMAGES_COUNT в папке images/, $SERVER_PUBLIC_IMAGES_COUNT в папке public/images/${NC}"
+
+    if [ "$SERVER_IMAGES_COUNT" -gt 0 ] || [ "$SERVER_PUBLIC_IMAGES_COUNT" -gt 0 ]; then
+        echo -e "${GREEN}✅ Изображения успешно загружены на сервер${NC}"
+    else
+        echo -e "${YELLOW}⚠️  На сервере не найдено изображений${NC}"
+    fi
+
+    # Проверяем доступность изображений через веб
+    if [ ! -z "$PRODUCTION_DOMAIN" ]; then
+        echo -e "${BLUE}🌐 Проверяю публичный доступ к изображениям...${NC}"
+
+        # Проверяем доступ к случайному изображению (если есть изображения в public/images)
+        if [ "$SERVER_PUBLIC_IMAGES_COUNT" -gt 0 ]; then
+            RANDOM_IMAGE=$(ssh $SSH_USER@$SSH_HOST "ls $REMOTE_PATH/public/images/ | head -1")
+            if [ ! -z "$RANDOM_IMAGE" ]; then
+                if curl -f -s "https://$PRODUCTION_DOMAIN/public/images/$RANDOM_IMAGE" > /dev/null; then
+                    echo -e "${GREEN}✅ Изображения доступны публично: https://$PRODUCTION_DOMAIN/public/images/$RANDOM_IMAGE${NC}"
+                else
+                    echo -e "${YELLOW}⚠️  Изображения могут быть недоступны публично${NC}"
+                fi
+            fi
+        fi
+    fi
+
+else
+    echo -e "${YELLOW}⚠️  SSH не настроен, пропускаю загрузку изображений${NC}"
+fi
+
+echo -e "${GREEN}✅ Деплой изображений завершен успешно!${NC}"
+
 # Пост-деплой действия
 echo -e "${YELLOW}🔄 Выполняю пост-деплой действия...${NC}"
 
