@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Trees, Scissors, SprayCan } from 'lucide-react';
 import Image from 'next/image';
 import { IMAGES } from '@/lib/constants';
+import { useScrollAnimation, useStaggeredAnimation } from '@/hooks/use-scroll-animation';
 
 const services = [
   {

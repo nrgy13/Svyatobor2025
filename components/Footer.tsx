@@ -12,7 +12,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://wa.me/79952209432" 
+                href="https://wa.me/79250000033" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-white hover:text-warm-beige transition-colors"
@@ -21,7 +21,7 @@ export default function Footer() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
               </a>
               <a 
-                href="tel:+79952209432"
+                href="tel:+79250000033"
                 className="text-white hover:text-warm-beige transition-colors"
                 aria-label="Телефон"
               >
@@ -72,8 +72,8 @@ export default function Footer() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <a href="tel:+79952209432" className="hover:text-warm-beige transition-colors">
-                  +7 (995) 220-94-32
+                <a href="tel:+79250000033" className="hover:text-warm-beige transition-colors">
+                  +7 (925) 000-00-33
                 </a>
               </li>
               <li className="flex items-center">
