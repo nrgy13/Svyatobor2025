@@ -17,8 +17,11 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Настройки для корректной работы critters в Next.js 14
   experimental: {
-    optimizeCss: false,
+    optimizeCss: {
+      critters: false // Отключаем critters для избежания ошибок сборки
+    },
     optimizePackageImports: ['@supabase/supabase-js', 'lucide-react'],
   },
   // Настройки для статического хостинга Timeweb
