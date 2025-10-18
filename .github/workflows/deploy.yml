@@ -1,0 +1,150 @@
+name: 🚀 Деплой на Timeweb Cloud
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout код
+      uses: actions/checkout@v4
+
+    - name: 🔧 Настройка Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: 📦 Установка зависимостей
+      run: npm ci
+
+    - name: 🏗️ Сборка приложения
+      run: npm run build
+
+    - name: 🧪 Тестирование сборки
+      run: |
+        ls -la out/
+        test -f "out/index.html" && echo "✅ index.html найден" || echo "❌ index.html отсутствует"
+        test -f "out/404.html" && echo "✅ 404.html найден" || echo "❌ 404.html отсутствует"
+
+    - name: 📤 Деплой на сервер (только при пуше в main)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          echo "🚀 Начинаю деплой Svyatobor Web..."
+
+          # Создание резервной копии
+          BACKUP_DIR="backup/backup-$(date +%Y%m%d-%H%M%S)"
+          mkdir -p backup
+          cp -r /var/www/html "$BACKUP_DIR"
+          echo "✅ Резервная копия создана: $BACKUP_DIR"
+
+          # Очистка старых файлов
+          rm -rf /var/www/html/*
+          echo "✅ Очистка завершена"
+
+          # Создание структуры директорий
+          mkdir -p /var/www/html/images
+          mkdir -p /var/www/html/public/images
+
+          echo "📋 Статус деплоя:"
+          echo "Директория деплоя: /var/www/html"
+          echo "Домены: svyatobor.ru"
+
+    - name: 📤 Загрузка файлов через rsync
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          # Загрузка основных файлов
+          rsync -avz --delete ./out/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/
+          echo "✅ Основные файлы загружены"
+
+          # Загрузка изображений
+          rsync -avz ./images/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/images/
+          rsync -avz ./public/images/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/public/images/
+          echo "✅ Изображения загружены"
+
+    - name: 🔐 Настройка прав доступа
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          # Настройка прав доступа
+          chmod -R 755 /var/www/html/
+          find /var/www/html/ -type f -exec chmod 644 {} \;
+          echo "✅ Права доступа настроены"
+
+    - name: 🔄 Перезапуск веб-сервера
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          # Перезапуск nginx
+          sudo systemctl reload nginx
+          sudo systemctl status nginx --no-pager
+          echo "✅ Веб-сервер перезапущен"
+
+    - name: ✅ Проверка деплоя
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          echo "🔍 Проверка результатов деплоя:"
+
+          # Проверка основных файлов
+          test -f "/var/www/html/index.html" && echo "✅ index.html развернут" || echo "❌ index.html не найден"
+          test -d "/var/www/html/images" && echo "✅ Папка images развернута" || echo "❌ Папка images не найдена"
+          test -d "/var/www/html/public/images" && echo "✅ Папка public/images развернута" || echo "❌ Папка public/images не найдена"
+
+          # Проверка размера файлов
+          du -sh /var/www/html/
+          ls -la /var/www/html/ | head -10
+
+          echo "🎉 Деплой завершен успешно!"
+          echo "🌐 Сайт доступен по адресу: https://${{ secrets.PRODUCTION_DOMAIN }}"
+
+    - name: 📢 Уведомление о деплое
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/telegram-action@v0.3.0
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        format: markdown
+        message: |
+          🚀 **Деплой завершен успешно!**
+
+          **Проект:** Svyatobor Web
+          **Ветка:** ${{ github.ref_name }}
+          **Коммит:** ${{ github.sha }}
+          **Время:** $(date)
+
+          🌐 **Сайт:** https://${{ secrets.PRODUCTION_DOMAIN }}
+
+          📊 **Статус:** ✅ Готов к работе
