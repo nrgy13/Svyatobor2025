@@ -36,7 +36,15 @@ export type ContactFormData = {
 };
 
 export async function submitContactForm(data: ContactFormData) {
-  const { error } = await supabase.from('contact_requests').insert([data]);
+  console.log('📝 Отправка данных формы в Supabase:', data);
+   const { error } = await supabase.from('contact_submissions').insert([data]);
+
+   if (error) {
+     console.error('❌ Ошибка отправки формы:', error);
+     throw new Error('Не удалось отправить форму. Пожалуйста, попробуйте позже.');
+   }
+
+   console.log('✅ Форма успешно отправлена в Supabase');
 
   if (error) {
     throw new Error('Не удалось отправить форму. Пожалуйста, попробуйте позже.');

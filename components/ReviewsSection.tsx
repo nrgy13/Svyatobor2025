@@ -203,7 +203,7 @@ export default function ReviewsSection() {
             </p>
             <button 
               className="inline-flex items-center justify-center px-6 py-3 border border-forest-green text-forest-green font-medium rounded-lg hover:bg-forest-green hover:text-white transition-colors duration-300"
-              onClick={() => window.open('https://wa.me/79952209432?text=Здравствуйте!%20Я%20хочу%20оставить%20отзыв%20о%20вашей%20работе.', '_blank')}
+              onClick={() => window.open('https://wa.me/79250000033?text=Здравствуйте!%20Я%20хочу%20оставить%20отзыв%20о%20вашей%20работе.', '_blank')}
             >
               Оставить отзыв
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

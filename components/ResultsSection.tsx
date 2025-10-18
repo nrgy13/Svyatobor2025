@@ -52,7 +52,7 @@ export default function ResultsSection() {
               variant="outline" 
               size="lg" 
               className="border-2 border-white bg-white text-black hover:text-[#00FF00] hover:bg-transparent text-lg font-medium transition-all duration-300 rounded-lg"
-              onClick={() => window.open('tel:+79952209432', '_blank')}
+              onClick={() => window.open('tel:+79250000033', '_blank')}
             >
               Позвонить сейчас
             </Button>
