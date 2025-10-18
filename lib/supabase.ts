@@ -36,25 +36,37 @@ export type ContactFormData = {
 };
 
 export async function submitContactForm(data: ContactFormData) {
-  console.log('📝 Отправка данных формы в Supabase:', data);
-   const { error } = await supabase.from('contact_submissions').insert([data]);
+  console.log('📝 Отправка данных формы через API endpoint:', data);
 
-   if (error) {
-     console.error('❌ Ошибка отправки формы:', error);
-     throw new Error('Не удалось отправить форму. Пожалуйста, попробуйте позже.');
-   }
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-   console.log('✅ Форма успешно отправлена в Supabase');
-    // Дополнительная диагностика для выявления проблем
-    console.log('🔍 Дополнительная диагностика...');
-    console.log('📊 Данные для отправки:', JSON.stringify(data, null, 2));
-    console.log('🔗 Supabase клиент инициализирован:', !!supabase);
+    const result = await response.json();
 
-  if (error) {
-    throw new Error('Не удалось отправить форму. Пожалуйста, попробуйте позже.');
+    if (!response.ok) {
+      console.error('❌ Ошибка ответа от API:', result);
+      throw new Error(result.error || 'Не удалось отправить форму. Пожалуйста, попробуйте позже.');
+    }
+
+    console.log('✅ Форма успешно отправлена через API:', result);
+    return result;
+
+  } catch (error) {
+    console.error('❌ Ошибка при отправке формы:', error);
+
+    // Если это сетевая ошибка или API недоступен, возвращаем понятное сообщение
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Не удалось подключиться к серверу. Проверьте подключение к интернету.');
+    }
+
+    throw error;
   }
-
-  return { success: true };
 }
 
 // Storage configuration

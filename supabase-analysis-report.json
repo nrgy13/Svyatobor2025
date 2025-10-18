@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-10-18T20:57:36.945Z",
+  "totalTables": 0,
+  "tables": [
+    {
+      "name": "contact_requests",
+      "exists": true,
+      "recordCount": 0,
+      "columns": 0,
+      "structure": []
+    },
+    {
+      "name": "contact_submissions",
+      "exists": true,
+      "recordCount": 0,
+      "columns": 0,
+      "structure": []
+    }
+  ]
+}

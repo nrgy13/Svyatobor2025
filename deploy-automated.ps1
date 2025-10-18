@@ -140,7 +140,7 @@ function Test-Prerequisites {
     }
 
     # Проверка наличия модулей деплоя
-    $requiredModules = @("config.psm1", "logger.psm1", "validator.ps1", "deployer.psm1")
+    $requiredModules = @("config.psm1", "logger.psm1", "validator.psm1", "deployer.psm1")
     foreach ($module in $requiredModules) {
         $modulePath = Join-Path "deploy-modules" $module
         if (!(Test-Path $modulePath)) {
@@ -201,7 +201,9 @@ function Start-DeploymentProcess {
                 return $false
             }
             Write-Host "✅ Валидация пройдена успешно" -ForegroundColor $ColorScheme.Success
-        } else {
+        }
+         }
+         else {
             Write-Host "⏭️ Шаг валидации пропущен" -ForegroundColor $ColorScheme.Warning
         }
 
@@ -215,7 +217,9 @@ function Start-DeploymentProcess {
                 Write-Host "📊 Длительность: $($deployResult.Duration)" -ForegroundColor $ColorScheme.Info
                 Write-Host "🔗 Действия: $($deployResult.Actions.Count) выполнено" -ForegroundColor $ColorScheme.Info
                 return $true
-            } else {
+            }
+         }
+         else {
                 Write-Host "❌ Деплой завершился с ошибками!" -ForegroundColor $ColorScheme.Error
                 Write-Host "📋 Ошибки:" -ForegroundColor $ColorScheme.Error
                 foreach ($errorMsg in $deployResult.Errors) {
@@ -223,7 +227,9 @@ function Start-DeploymentProcess {
                 }
                 return $false
             }
-        } else {
+        }
+         }
+         else {
             Write-Host "🎭 Тестовый режим: фактический деплой пропущен" -ForegroundColor $ColorScheme.Warning
             return $true
         }
@@ -307,7 +313,9 @@ function Show-Summary {
         Write-Host "   1. Проверьте работу сайта в браузере" -ForegroundColor $ColorScheme.Info
         Write-Host "   2. Убедитесь, что все функции работают корректно" -ForegroundColor $ColorScheme.Info
         Write-Host "   3. Проверьте логи сервера при необходимости" -ForegroundColor $ColorScheme.Info
-    } else {
+    }
+         }
+         else {
         Write-Host "❌ СТАТУС: ОШИБКА" -ForegroundColor $ColorScheme.Error
         Write-Host "🎯 Среда: $Environment" -ForegroundColor $ColorScheme.Error
         Write-Host "⏱️ Длительность: $($duration.TotalMinutes.ToString("F1")) минут" -ForegroundColor $ColorScheme.Info
@@ -340,7 +348,9 @@ try {
     if ($Rollback) {
         $success = Start-RollbackProcess
         Show-Summary -Success $success -Environment $Environment
-        if ($success) { exit 0 } else { exit 1 }
+        if ($success) { exit 0 }
+         }
+         else { exit 1 }
     }
 
     # Проверяем предварительные требования
@@ -356,7 +366,9 @@ try {
     Show-Summary -Success $success -Environment $Environment
 
     # Возвращаем код завершения
-    if ($success) { exit 0 } else { exit 1 }
+    if ($success) { exit 0 }
+         }
+         else { exit 1 }
 
 } catch {
     Write-Host ""

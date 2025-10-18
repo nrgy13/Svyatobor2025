@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Используем standalone для поддержки API маршрутов
+  output: 'standalone',
   trailingSlash: true,
   images: {
     unoptimized: true,
