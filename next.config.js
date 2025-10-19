@@ -1,33 +1,51 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Используем standalone для поддержки API маршрутов
-  output: 'standalone',
+  output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'bvuagbjdedtfmvitrfpa.supabase.co',
-        port: '',
-        pathname: '/storage/v1/object/public/**',
-      },
-    ],
+    domains: ['localhost'],
+    formats: ['image/webp', 'image/avif'],
   },
-  // Оптимизации для продакшена
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+  // Оптимизация для статической сборки
+  generateBuildId: async () => {
+    return 'build-cache-' + Date.now()
+  },
+  // Уменьшение размера бандла
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Настройки для корректной работы critters в Next.js 14
-  experimental: {
-    optimizeCss: {
-      critters: false // Отключаем critters для избежания ошибок сборки
-    },
-    optimizePackageImports: ['@supabase/supabase-js', 'lucide-react'],
-  },
-  // Настройки для статического хостинга Timeweb
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/' : '',
-  basePath: process.env.NODE_ENV === 'production' ? '' : '',
-};
+  // Настройки для лучшей производительности сборки
+  webpack: (config, { isServer }) => {
+    // Оптимизация для клиентской сборки
+    if (!isServer) {
+      config.optimization.splitChunks.cacheGroups = {
+        ...config.optimization.splitChunks.cacheGroups,
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+        },
+      }
+    }
 
-module.exports = nextConfig;
+    // Уменьшение размера бандла
+    config.optimization = {
+      ...config.optimization,
+      moduleIds: 'deterministic',
+      chunkIds: 'deterministic',
+    }
+
+    return config
+  },
+  // Настройки для экспорта статических файлов
+  exportPathMap: async function (defaultPathMap) {
+    return defaultPathMap
+  },
+}
+
+module.exports = nextConfig
