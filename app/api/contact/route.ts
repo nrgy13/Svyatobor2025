@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-// API маршрут требует динамического рендеринга для обработки запросов
-export const dynamic = 'force-dynamic';
+// Next.js автоматически определяет динамический рендеринг для API маршрутов
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');

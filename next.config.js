@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Используем статический экспорт только для продакшена
+  ...(process.env.NODE_ENV === 'production' ? { output: 'export' } : {}),
   trailingSlash: true,
   images: {
     unoptimized: true,
@@ -10,17 +11,17 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
-  // Оптимизация для статической сборки
-  generateBuildId: async () => {
-    return 'build-cache-' + Date.now()
-  },
+  // Оптимизация для статической сборки - убираем проблемные настройки
+  // generateBuildId: async () => {
+  //   return 'build-cache-' + Date.now()
+  // },
   // Уменьшение размера бандла
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   // Настройки для лучшей производительности сборки
   webpack: (config, { isServer }) => {
-    // Оптимизация для клиентской сборки
+    // Оптимизация для клиентской сборки - упрощаем настройки
     if (!isServer) {
       config.optimization.splitChunks.cacheGroups = {
         ...config.optimization.splitChunks.cacheGroups,
@@ -33,7 +34,7 @@ const nextConfig = {
       }
     }
 
-    // Уменьшение размера бандла
+    // Упрощаем оптимизацию бандла
     config.optimization = {
       ...config.optimization,
       moduleIds: 'deterministic',
@@ -42,10 +43,10 @@ const nextConfig = {
 
     return config
   },
-  // Настройки для экспорта статических файлов
-  exportPathMap: async function (defaultPathMap) {
-    return defaultPathMap
-  },
+  // Убираем потенциально проблемные настройки экспорта
+  // exportPathMap: async function (defaultPathMap) {
+  //   return defaultPathMap
+  // },
 }
 
 module.exports = nextConfig
