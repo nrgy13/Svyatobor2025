@@ -9,10 +9,44 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
     steps:
     - name: 📥 Checkout код
       uses: actions/checkout@v4
+
+    - name: 🛂 Проверка и инструкция по IAM (информативно)
+      if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || github.event_name == 'push'
+      shell: bash
+      run: |
+        cat <<'MSG'
+        Инструкция по настройке IAM для Gemini:
+
+        1) Включите API:
+           gcloud services enable cloudaicompanion.googleapis.com --project=PROJECT_ID
+
+        2) Добавьте роли (замените PROJECT_ID и PRINCIPAL):
+           gcloud projects add-iam-policy-binding PROJECT_ID \
+             --member="user:email@example.com" \
+             --role="roles/aiplatform.user"
+
+           gcloud projects add-iam-policy-binding PROJECT_ID \
+             --member="user:email@example.com" \
+             --role="roles/serviceusage.serviceUsageConsumer"
+
+        3) Для сервисного аккаунта замените --member на:
+           --member="serviceAccount:sa-name@PROJECT_ID.iam.gserviceaccount.com"
+
+        4) Проверьте роли в консоли: Console → IAM & Admin → IAM
+
+        Примечание: роль "Gemini for Google Cloud User" отображается как часть ролей AI Platform / Vertex AI (roles/aiplatform.user) в gcloud.
+        MSG
 
     - name: 🔧 Настройка Node.js
       uses: actions/setup-node@v4
@@ -32,62 +66,119 @@ jobs:
         test -f "out/index.html" && echo "✅ index.html найден" || echo "❌ index.html отсутствует"
         test -f "out/404.html" && echo "✅ 404.html найден" || echo "❌ 404.html отсутствует"
 
-    - name: 🔑 Настройка SSH ключа
+    - name: 🔎 Валидация переменных окружения (маскировано)
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      shell: bash
       run: |
+        set -eu
+        show_presence() { [ -n "$1" ] && echo "set" || echo "missing"; }
+        show_len() { [ -n "$1" ] && echo "${#1}" || echo "0"; }
+        echo "SSH_HOST: $(show_presence "$SSH_HOST")"
+        echo "SSH_USER: $(show_presence "$SSH_USER")"
+        echo "SSH_PRIVATE_KEY length: $(show_len "$SSH_PRIVATE_KEY")"
+        echo "PRODUCTION_DOMAIN: $(show_presence "$PRODUCTION_DOMAIN")"
+        echo "TELEGRAM_BOT_TOKEN: $(show_presence "$TELEGRAM_BOT_TOKEN")"
+        echo "TELEGRAM_CHAT_ID: $(show_presence "$TELEGRAM_CHAT_ID")"
+
+    # Установка zsh и Oh My Zsh была удалена как избыточная
+
+    - name: 🔑 Настройка SSH ключа
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
+      run: |
+        set -eu
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+        printf '%s' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
         chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
 
     - name: 🔍 Проверка SSH соединения
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
       run: |
+        set -e
         echo "🔎 Проверка содержимого SSH ключа (первые строки):"
-        head -n 2 ~/.ssh/deploy_key
+        head -n 2 ~/.ssh/deploy_key || true
         echo "📋 Права доступа и владелец:"
-        stat ~/.ssh/deploy_key
+        stat ~/.ssh/deploy_key || true
         echo "🔌 Подробное тестирование SSH:"
-        ssh -vvv -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        ssh -vvv -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+          set -e
           echo "1. Текущий пользователь: $(whoami)"
           echo "2. Текущая директория: $(pwd)"
           echo "3. Права на /var/www/html:"
           ls -la /var/www/html/
           echo "4. Проверка прав на запись:"
           touch /var/www/html/test_write && echo "✅ Запись разрешена" || echo "❌ Запись запрещена"
+          rm -f /var/www/html/test_write
+          echo "5. Тестовый файл удален"
         EOF
 
     - name: 📤 Деплой файлов через SSH
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
       run: |
         rsync -avz --delete \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-          ./out/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/
+          ./out/ "$SSH_USER@$SSH_HOST:/var/www/html/"
 
     - name: 📤 Синхронизация изображений
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
       run: |
         rsync -avz \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-          ./images/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/images/
+          ./images/ "$SSH_USER@$SSH_HOST:/var/www/html/images/" || true
         rsync -avz \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-          ./public/images/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/public/images/
+          ./public/images/ "$SSH_USER@$SSH_HOST:/var/www/html/public/images/" || true
 
     - name: ✅ Проверка деплоя
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
       run: |
         echo "🔍 Проверка результатов деплоя:"
-        ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls -la /var/www/html/"
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "ls -la /var/www/html/"
         echo "🎉 Деплой завершен успешно!"
-        echo "🌐 Сайт доступен по адресу: https://${{ secrets.PRODUCTION_DOMAIN }}"
+        if [ -n "$PRODUCTION_DOMAIN" ]; then
+          echo "🌐 Сайт доступен по адресу: https://$PRODUCTION_DOMAIN"
+        fi
 
     - name: 📢 Уведомление о деплое
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: appleboy/telegram-action@v0.3.0
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.TELEGRAM_BOT_TOKEN != '' &&
+        env.TELEGRAM_CHAT_ID != ''
+      uses: appleboy/telegram-action@v1.0.1
       with:
-        to: ${{ secrets.TELEGRAM_CHAT_ID }}
-        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        to: ${{ env.TELEGRAM_CHAT_ID }}
+        token: ${{ env.TELEGRAM_BOT_TOKEN }}
         format: markdown
         message: |
           🚀 **Деплой завершен успешно!**
@@ -95,8 +186,7 @@ jobs:
           **Проект:** Svyatobor Web
           **Ветка:** ${{ github.ref_name }}
           **Коммит:** ${{ github.sha }}
-          **Время:** $(date)
 
-          🌐 **Сайт:** https://${{ secrets.PRODUCTION_DOMAIN }}
+          🌐 **Сайт:** https://${{ env.PRODUCTION_DOMAIN }}
 
           📊 **Статус:** ✅ Готов к работе
