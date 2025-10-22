@@ -1,0 +1,20 @@
+{
+  // ...existing code...
+  // Force integrated terminal profiles for normal and automation use so commands execute in Terminal panel
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.automationProfile.windows": "PowerShell",
+
+  // Optional: explicit path for PowerShell (uncomment if VS Code cannot resolve profile automatically)
+  // "terminal.integrated.profiles.windows": {
+  //   "PowerShell": {
+  //     "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  //     "args": []
+  //   }
+  // },
+
+  // Helpful UX settings
+  "terminal.integrated.confirmOnKill": false,
+"terminal.integrated.tabs.enabled": true,
+"accessibility.verbosity.terminal": true,
+"terminal.explorerKind": "integrated"
+}
