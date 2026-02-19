@@ -1,40 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-// Next.js автоматически определяет динамический рендеринг для API маршрутов
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
+const N8N_WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+
+if (!N8N_WEBHOOK_URL) {
+  throw new Error('Missing environment variable: NEXT_PUBLIC_N8N_WEBHOOK_URL');
 }
-
-if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Missing environment variable: SUPABASE_SERVICE_ROLE_KEY');
-}
-
-// Создаем серверный клиент Supabase с Service Role Key для записи данных
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-);
 
 export type ContactFormData = {
   name: string;
   phone: string;
+  email?: string;
+  service?: string;
+  objectType?: string;
+  address?: string;
+  message?: string;
   preferredTime?: string;
 };
 
 export async function POST(request: NextRequest) {
   try {
-    // Получаем данные из запроса
     const body = await request.json();
-    const { name, phone, preferredTime }: ContactFormData = body;
+    const { name, phone, email, service, objectType, address, message, preferredTime }: ContactFormData = body;
 
-    // Валидация данных
     if (!name || !phone) {
       return NextResponse.json(
         { error: 'Имя и телефон обязательны для заполнения' },
@@ -42,7 +29,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Проверяем длину имени
     if (name.length < 2) {
       return NextResponse.json(
         { error: 'Имя должно содержать не менее 2 символов' },
@@ -50,7 +36,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Проверяем формат телефона
     if (phone.length < 10) {
       return NextResponse.json(
         { error: 'Введите корректный номер телефона' },
@@ -58,39 +43,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Подготавливаем данные для вставки
-    const dataToInsert = {
+    const payload = {
       name: name.trim(),
       phone: phone.trim(),
-      preferred_time: preferredTime?.trim() || null,
-      created_at: new Date().toISOString(),
-      status: 'new' // Добавляем статус для отслеживания обработки заявок
+      email: email?.trim() || '',
+      service: service?.trim() || '',
+      objectType: objectType?.trim() || '',
+      address: address?.trim() || '',
+      message: message?.trim() || '',
+      preferredTime: preferredTime?.trim() || '',
+      createdAt: new Date().toISOString(),
     };
 
-    console.log('📝 Сохранение данных формы в Supabase:', dataToInsert);
+    console.log('📝 Отправка данных формы в n8n webhook:', payload);
 
-    // Вставляем данные в таблицу contact_requests
-    const { data, error } = await supabaseAdmin
-      .from('contact_submissions')
-      .insert([dataToInsert])
-      .select();
+    const response = await fetch(N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-    if (error) {
-      console.error('❌ Ошибка сохранения в Supabase:', error);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Ошибка отправки в n8n:', response.status, errorText);
       return NextResponse.json(
-        { error: 'Не удалось сохранить заявку. Пожалуйста, попробуйте позже.' },
+        { error: 'Не удалось отправить заявку. Пожалуйста, попробуйте позже.' },
         { status: 500 }
       );
     }
 
-    console.log('✅ Заявка успешно сохранена в Supabase:', data);
-
-    // Возвращаем успешный ответ
+    console.log('✅ Заявка успешно отправлена в n8n');
+    
     return NextResponse.json(
       {
         success: true,
         message: 'Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.',
-        id: data?.[0]?.id
       },
       { status: 200 }
     );
@@ -104,7 +93,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Обработка OPTIONS запросов для CORS (если нужно)
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,

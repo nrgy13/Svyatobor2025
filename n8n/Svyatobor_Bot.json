@@ -1,0 +1,247 @@
+{
+  "name": "Svyatobor_Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "svyatobor-zayavki",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f89cd343-948c-4ec5-8365-e050a57834c3",
+      "name": "Webhook",
+      "webhookId": "5b8c913a-6f20-4ace-babb-a4d0e1f9764b",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5ly3mazvQgLDVRhr",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "2h0V1PCI00UqauF2",
+          "mode": "list",
+          "cachedResultName": "DezTechUg_Client",
+          "cachedResultUrl": "/projects/8chqbrkPuSShhKVQ/datatables/2h0V1PCI00UqauF2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "phone": "={{ $json.phone }}",
+            "email": "={{ $json.email }}",
+            "service": "={{ $json.service }}",
+            "ObjectType": "={{ $json.objectType }}",
+            "address": "={{ $json.address }}",
+            "preferredTime": "={{ $json.preferredTime }}",
+            "message": "={{ $json.message }}",
+            "createdAt": "={{ $json.createdAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ObjectType",
+              "displayName": "ObjectType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferredTime",
+              "displayName": "preferredTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "5e46022c-84fb-4488-9e60-c58acd7e9adb",
+      "name": "Insert row1"
+    },
+    {
+      "parameters": {
+        "chatId": "ваш_chat_id",
+        "text": "=<b>🔔 НОВАЯ ЗАЯВКА С САЙТА СВЯТОБОР</b>\n\n👤 <b>Клиент:</b> {{ $json.name }}\n📞 <b>Телефон:</b> <code>{{ $json.phone }}</code>\n📧 <b>Email:</b> {{ $json.email }}\n📍 <b>Адрес:</b> {{ $json.address }}\n\n🛠 <b>Услуга:</b> {{ $json.service }}\n🏠 <b>Объект:</b> {{ $json.objectType }}\n⏰ <b>Время:</b> {{ $json.preferredTime }}\n\n💬 <b>Сообщение от клиента:</b>\n<blockquote>{{ $json.message }}</blockquote>\n\n🆔 <code>#{{ $json.createdAt }}</code>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        0
+      ],
+      "id": "207d4930-8589-46a7-8fdb-6173e47b83e8",
+      "name": "[ALERT] Svyatobor_bot",
+      "webhookId": "a19a0655-2617-4a65-861a-02e47bc1a1b2",
+      "credentials": {
+        "telegramApi": {
+          "id": "NGhdCQLSej12bwUX",
+          "name": "Svyatobor23"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "svyatobor.23@yandex.ru",
+        "subject": "Заявка с сайта Святобор",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;\">\n  \n  <!-- Заголовок -->\n  <div style=\"background-color: #4CAF50; color: white; padding: 20px; text-align: center;\">\n    <h2 style=\"margin: 0;\">🟢 Новая заявка с сайта Святобор</h2>\n  </div>\n\n  <!-- Основная информация -->\n  <div style=\"padding: 20px; background-color: #f9f9f9;\">\n    <table style=\"width: 100%; border-collapse: collapse;\">\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee; width: 40%;\"><strong>👤 Клиент:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.name }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>📞 Телефон:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">\n          <a href=\"tel:{{ $json.phone }}\" style=\"color: #4CAF50; text-decoration: none; font-weight: bold;\">{{ $json.phone }}</a>\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>📧 Email:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">\n          <a href=\"mailto:{{ $json.email }}\" style=\"color: #2196F3; text-decoration: none;\">{{ $json.email }}</a>\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>📍 Адрес:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.address }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>🏷️ Услуга:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.service }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>🏠 Объект:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.objectType }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>⏰ Удобное время:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.preferredTime }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\"><strong>💬 Сообщение:</strong></td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.message }}</td>\n      </tr>\n    </table>\n  </div>\n\n  <!-- Подвал -->\n  <div style=\"background-color: #f5f5f5; padding: 20px; text-align: center;\">\n    <p style=\"margin: 0; color: #666;\">📅 Дата заявки: {{ $json.createdAt }}</p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        208
+      ],
+      "id": "da7d3421-8eb8-4ea8-85a3-b64be8b48fb2",
+      "name": "Send a message",
+      "webhookId": "150771fa-a44e-45b9-b221-b8d198f9772e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jBcaydgu0VdYmXRL",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Insert row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row1": {
+      "main": [
+        [
+          {
+            "node": "[ALERT] Svyatobor_bot",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d7de9571-d60e-4c04-8b08-1e2d6014d26b",
+  "meta": {
+    "instanceId": "1da9dfbdca26a9ac29c6deff6e1cfb9b2ec6400a1f93a40ca3a1786987c776d0"
+  },
+  "id": "jV9rC_noG1NSMJQtymqQI",
+  "tags": []
+}

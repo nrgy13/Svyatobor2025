@@ -32,12 +32,15 @@ export const supabaseAdmin = process.env.SUPABASE_SERVICE_ROLE_KEY ? createClien
 export type ContactFormData = {
   name: string;
   phone: string;
+  email?: string;
+  service?: string;
+  objectType?: string;
+  address?: string;
+  message?: string;
   preferredTime?: string;
 };
 
 export async function submitContactForm(data: ContactFormData) {
-  console.log('📝 Отправка данных формы через API endpoint:', data);
-
   try {
     const response = await fetch('/api/contact', {
       method: 'POST',
@@ -50,21 +53,13 @@ export async function submitContactForm(data: ContactFormData) {
     const result = await response.json();
 
     if (!response.ok) {
-      console.error('❌ Ошибка ответа от API:', result);
+      console.error('Ошибка при отправке формы:', result);
       throw new Error(result.error || 'Не удалось отправить форму. Пожалуйста, попробуйте позже.');
     }
 
-    console.log('✅ Форма успешно отправлена через API:', result);
-    return result;
-
+    return { success: true, message: result.message };
   } catch (error) {
-    console.error('❌ Ошибка при отправке формы:', error);
-
-    // Если это сетевая ошибка или API недоступен, возвращаем понятное сообщение
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Не удалось подключиться к серверу. Проверьте подключение к интернету.');
-    }
-
+    console.error('Ошибка при отправке формы:', error);
     throw error;
   }
 }
