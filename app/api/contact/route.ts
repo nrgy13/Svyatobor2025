@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const N8N_WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
 
-if (!N8N_WEBHOOK_URL) {
-  throw new Error('Missing environment variable: NEXT_PUBLIC_N8N_WEBHOOK_URL');
-}
-
 export type ContactFormData = {
   name: string;
   phone: string;
@@ -56,6 +52,14 @@ export async function POST(request: NextRequest) {
     };
 
     console.log('📝 Отправка данных формы в n8n webhook:', payload);
+
+    if (!N8N_WEBHOOK_URL) {
+      console.error('❌ Ошибка: NEXT_PUBLIC_N8N_WEBHOOK_URL не определен');
+      return NextResponse.json(
+        { error: 'Ошибка конфигурации сервера. Пожалуйста, свяжитесь с администратором.' },
+        { status: 500 }
+      );
+    }
 
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
