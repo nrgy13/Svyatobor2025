@@ -155,7 +155,7 @@
     },
     {
       "parameters": {
-        "chatId": "ваш_chat_id",
+        "chatId": "983656301",
         "text": "=<b>🔔 НОВАЯ ЗАЯВКА С САЙТА СВЯТОБОР</b>\n\n👤 <b>Клиент:</b> {{ $json.name }}\n📞 <b>Телефон:</b> <code>{{ $json.phone }}</code>\n📧 <b>Email:</b> {{ $json.email }}\n📍 <b>Адрес:</b> {{ $json.address }}\n\n🛠 <b>Услуга:</b> {{ $json.service }}\n🏠 <b>Объект:</b> {{ $json.objectType }}\n⏰ <b>Время:</b> {{ $json.preferredTime }}\n\n💬 <b>Сообщение от клиента:</b>\n<blockquote>{{ $json.message }}</blockquote>\n\n🆔 <code>#{{ $json.createdAt }}</code>",
         "additionalFields": {
           "appendAttribution": false,
