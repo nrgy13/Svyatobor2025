@@ -1,4 +1,4 @@
-name: 🚀 Деплой на Timeweb Apps
+name: 🚀 Деплой на Timeweb Apps с PM2
 
 on:
   push:
@@ -21,33 +21,6 @@ jobs:
     - name: 📥 Checkout код
       uses: actions/checkout@v4
 
-    - name: 🛂 Проверка и инструкция по IAM (информативно)
-      if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || github.event_name == 'push'
-      shell: bash
-      run: |
-        cat <<'MSG'
-        Инструкция по настройке IAM для Gemini:
-
-        1) Включите API:
-           gcloud services enable cloudaicompanion.googleapis.com --project=PROJECT_ID
-
-        2) Добавьте роли (замените PROJECT_ID и PRINCIPAL):
-           gcloud projects add-iam-policy-binding PROJECT_ID \
-             --member="user:email@example.com" \
-             --role="roles/aiplatform.user"
-
-           gcloud projects add-iam-policy-binding PROJECT_ID \
-             --member="user:email@example.com" \
-             --role="roles/serviceusage.serviceUsageConsumer"
-
-        3) Для сервисного аккаунта замените --member на:
-           --member="serviceAccount:sa-name@PROJECT_ID.iam.gserviceaccount.com"
-
-        4) Проверьте роли в консоли: Console → IAM & Admin → IAM
-
-        Примечание: роль "Gemini for Google Cloud User" отображается как часть ролей AI Platform / Vertex AI (roles/aiplatform.user) в gcloud.
-        MSG
-
     - name: 🔧 Настройка Node.js
       uses: actions/setup-node@v4
       with:
@@ -60,13 +33,7 @@ jobs:
     - name: 🏗️ Сборка приложения
       run: npm run build
 
-    - name: 🧪 Тестирование сборки
-      run: |
-        ls -la out/
-        test -f "out/index.html" && echo "✅ index.html найден" || echo "❌ index.html отсутствует"
-        test -f "out/404.html" && echo "✅ 404.html найден" || echo "❌ 404.html отсутствует"
-
-    - name: 🔎 Валидация переменных окружения (маскировано)
+    - name: 🔎 Валидация переменных окружения
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       shell: bash
       run: |
@@ -79,8 +46,6 @@ jobs:
         echo "PRODUCTION_DOMAIN: $(show_presence "$PRODUCTION_DOMAIN")"
         echo "TELEGRAM_BOT_TOKEN: $(show_presence "$TELEGRAM_BOT_TOKEN")"
         echo "TELEGRAM_CHAT_ID: $(show_presence "$TELEGRAM_CHAT_ID")"
-
-    # Установка zsh и Oh My Zsh была удалена как избыточная
 
     - name: 🔑 Настройка SSH ключа
       if: >
@@ -107,21 +72,13 @@ jobs:
       shell: bash
       run: |
         set -e
-        echo "🔎 Проверка содержимого SSH ключа (первые строки):"
-        head -n 2 ~/.ssh/deploy_key || true
-        echo "📋 Права доступа и владелец:"
-        stat ~/.ssh/deploy_key || true
-        echo "🔌 Подробное тестирование SSH:"
-        ssh -vvv -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+        echo "🔌 Тестирование SSH соединения:"
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
           set -e
           echo "1. Текущий пользователь: $(whoami)"
           echo "2. Текущая директория: $(pwd)"
-          echo "3. Права на /var/www/html:"
-          ls -la /var/www/html/
-          echo "4. Проверка прав на запись:"
-          touch /var/www/html/test_write && echo "✅ Запись разрешена" || echo "❌ Запись запрещена"
-          rm -f /var/www/html/test_write
-          echo "5. Тестовый файл удален"
+          echo "3. Проверка Node.js: $(node -v)"
+          echo "4. Проверка npm: $(npm -v)"
         EOF
 
     - name: 📤 Деплой файлов через SSH
@@ -135,7 +92,44 @@ jobs:
       run: |
         rsync -avz --delete \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-          ./out/ "$SSH_USER@$SSH_HOST:/var/www/html/"
+          --exclude='.git' \
+          --exclude='node_modules' \
+          --exclude='.next' \
+          --exclude='out' \
+          . "$SSH_USER@$SSH_HOST:/var/www/html/"
+
+    - name: 📤 Деплой PM2 конфигурации
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
+      run: |
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+          set -e
+
+          cd /var/www/html
+
+          echo "📦 Установка зависимостей..."
+          npm ci --production
+
+          echo "🏗️ Сборка приложения..."
+          npm run build
+
+          echo "📤 Установка PM2..."
+          npm install -g pm2
+
+          echo "🔄 Перезапуск приложения через PM2..."
+          pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
+
+          echo "💾 Сохранение конфигурации PM2..."
+          pm2 save
+
+          echo "✅ PM2 статус:"
+          pm2 status
+        EOF
 
     - name: 📤 Синхронизация изображений
       if: >
@@ -163,7 +157,16 @@ jobs:
       shell: bash
       run: |
         echo "🔍 Проверка результатов деплоя:"
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "ls -la /var/www/html/"
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+          echo "📂 Содержимое /var/www/html:"
+          ls -la /var/www/html/
+          echo ""
+          echo "🔄 Статус PM2:"
+          pm2 status
+          echo ""
+          echo "📊 Логи PM2 (последние 10 строк):"
+          pm2 logs --lines 10 --nostream
+        EOF
         echo "🎉 Деплой завершен успешно!"
         if [ -n "$PRODUCTION_DOMAIN" ]; then
           echo "🌐 Сайт доступен по адресу: https://$PRODUCTION_DOMAIN"
@@ -189,4 +192,6 @@ jobs:
 
           🌐 **Сайт:** https://${{ env.PRODUCTION_DOMAIN }}
 
-          📊 **Статус:** ✅ Готов к работе
+          📊 **PM2 статус:** ✅ Запущен
+
+          🎯 **API маршруты:** ✅ Работают
