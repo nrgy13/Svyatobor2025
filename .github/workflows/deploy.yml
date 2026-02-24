@@ -112,6 +112,9 @@ jobs:
 
           cd /var/www/html
 
+          echo "🧹 Очистка кэша Next.js..."
+          rm -rf .next
+
           echo "📦 Установка зависимостей..."
           npm ci --production
 
