@@ -117,13 +117,13 @@ jobs:
           npm install pm2
 
           echo "🔄 Перезапуск приложения через PM2..."
-          node node_modules/pm2/bin/pm2 reload ecosystem.config.js || node node_modules/pm2/bin/pm2 start ecosystem.config.js
+          npm exec pm2 -- reload ecosystem.config.js || npm exec pm2 -- start ecosystem.config.js
 
           echo "💾 Сохранение конфигурации PM2..."
-          node node_modules/pm2/bin/pm2 save
+          npm exec pm2 -- save
 
           echo "✅ PM2 статус:"
-          node node_modules/pm2/bin/pm2 status
+          npm exec pm2 -- status
         EOF
 
     - name: 📤 Синхронизация изображений
@@ -157,10 +157,10 @@ jobs:
           ls -la /var/www/html/
           echo ""
           echo "🔄 Статус PM2:"
-          node node_modules/pm2/bin/pm2 status
+          npm exec pm2 -- status
           echo ""
           echo "📊 Логи PM2 (последние 10 строк):"
-          node node_modules/pm2/bin/pm2 logs --lines 10 --nostream
+          npm exec pm2 -- logs --lines 10 --nostream
         EOF
         echo "🎉 Деплой завершен успешно!"
         if [ -n "$PRODUCTION_DOMAIN" ]; then
