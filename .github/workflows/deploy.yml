@@ -81,9 +81,6 @@ jobs:
           echo "4. Проверка npm: $(npm -v)"
         EOF
 
-    - name: 🏗️ Сборка проекта
-      run: npm run build
-
     - name: 📤 Деплой файлов через SSH
       if: >
         github.ref == 'refs/heads/main' &&
@@ -116,17 +113,17 @@ jobs:
           echo "📦 Установка зависимостей..."
           npm ci --production
 
-          echo "📤 Установка PM2..."
-          npm install -g pm2
+          echo "📤 Установка PM2 (локально в проект)..."
+          npm install --save-dev pm2
 
           echo "🔄 Перезапуск приложения через PM2..."
-          pm2 reload ecosystem.config.js || pm2 start ecosystem.config.js
+          npx pm2 reload ecosystem.config.js || npx pm2 start ecosystem.config.js
 
           echo "💾 Сохранение конфигурации PM2..."
-          pm2 save
+          npx pm2 save
 
           echo "✅ PM2 статус:"
-          pm2 status
+          npx pm2 status
         EOF
 
     - name: 📤 Синхронизация изображений
@@ -160,10 +157,10 @@ jobs:
           ls -la /var/www/html/
           echo ""
           echo "🔄 Статус PM2:"
-          pm2 status
+          npx pm2 status
           echo ""
           echo "📊 Логи PM2 (последние 10 строк):"
-          pm2 logs --lines 10 --nostream
+          npx pm2 logs --lines 10 --nostream
         EOF
         echo "🎉 Деплой завершен успешно!"
         if [ -n "$PRODUCTION_DOMAIN" ]; then
