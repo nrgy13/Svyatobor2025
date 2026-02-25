@@ -81,6 +81,31 @@ jobs:
           echo "4. Проверка npm: $(npm -v)"
         EOF
 
+    - name: 🧹 Очистка места на сервере
+      if: >
+        github.ref == 'refs/heads/main' &&
+        github.event_name == 'push' &&
+        env.SSH_HOST != '' &&
+        env.SSH_USER != '' &&
+        env.SSH_PRIVATE_KEY != ''
+      shell: bash
+      run: |
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+          echo "🧹 Очистка дискового пространства..."
+          # Очистка кэша npm
+          npm cache clean --force
+          
+          # Удаление старых сборок и зависимостей
+          rm -rf /var/www/html/.next
+          rm -rf /var/www/html/node_modules
+          
+          # Очистка логов PM2 (опционально, но полезно)
+          rm -f ~/.pm2/logs/*.log
+          
+          echo "💾 Свободное место после очистки:"
+          df -h /
+        EOF
+
     - name: 📤 Деплой файлов через SSH
       if: >
         github.ref == 'refs/heads/main' &&
