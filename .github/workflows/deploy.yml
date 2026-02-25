@@ -110,11 +110,11 @@ jobs:
 
           cd /var/www/html
 
-          echo "📦 Установка зависимостей..."
+          echo "📦 Установка production зависимостей..."
           npm ci --production
 
-          echo "📤 Установка PM2 (локально в проект)..."
-          npm install --save-dev pm2
+          echo "📤 Установка PM2..."
+          npm install pm2
 
           echo "🔄 Перезапуск приложения через PM2..."
           ./node_modules/.bin/pm2 reload ecosystem.config.js || ./node_modules/.bin/pm2 start ecosystem.config.js
