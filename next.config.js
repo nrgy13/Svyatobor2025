@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Используем статический экспорт только для продакшена
-  ...(process.env.NODE_ENV === 'production' ? { output: 'export' } : {}),
+  // output: 'export' убран, так как нам нужны API Routes
   trailingSlash: true,
   images: {
     unoptimized: true,
