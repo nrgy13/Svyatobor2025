@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { ContactFormData, submitContactForm } from '@/lib/supabase';
+import { ContactFormData, submitContactForm } from '@/lib/api';
 
 const formSchema = z.object({
   name: z.string().min(2, {

@@ -1,33 +1,38 @@
 import { createClient } from '@supabase/supabase-js';
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
-}
+// Supabase используется только для загрузки изображений и работы с БД,
+// если это необходимо. Для формы обратной связи используется api/contact.
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error('Missing environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY');
-}
-
-// Service Role Key нужен только на сервере для загрузки файлов
-// На клиенте достаточно анонимного ключа для чтения публичных изображений
-
-// Create Supabase client with environment variables
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+// Create Supabase client with environment variables if available
+export const supabase = (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    )
+  : {
+      // Mock client if config is missing
+      storage: {
+        from: () => ({
+          getPublicUrl: () => ({ data: { publicUrl: '' } }),
+          upload: async () => ({ error: { message: 'Supabase not configured' } }),
+          remove: async () => ({ error: { message: 'Supabase not configured' } }),
+        }),
+      },
+    } as any;
 
 // Create server-side Supabase client for Storage operations (только если Service Role Key доступен)
-export const supabaseAdmin = process.env.SUPABASE_SERVICE_ROLE_KEY ? createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-) : null;
+export const supabaseAdmin = (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
+  : null;
 
 export type ContactFormData = {
   name: string;
@@ -39,30 +44,6 @@ export type ContactFormData = {
   message?: string;
   preferredTime?: string;
 };
-
-export async function submitContactForm(data: ContactFormData) {
-  try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      console.error('Ошибка при отправке формы:', result);
-      throw new Error(result.error || 'Не удалось отправить форму. Пожалуйста, попробуйте позже.');
-    }
-
-    return { success: true, message: result.message };
-  } catch (error) {
-    console.error('Ошибка при отправке формы:', error);
-    throw error;
-  }
-}
 
 // Storage configuration
 const STORAGE_BUCKET = 'images';
