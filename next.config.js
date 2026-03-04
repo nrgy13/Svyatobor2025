@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export' убран, так как нам нужны API Routes
+  // Используем standalone режим для деплоя в Docker/Node.js
+  output: 'standalone',
   trailingSlash: true,
   images: {
     unoptimized: true,
