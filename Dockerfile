@@ -3,8 +3,7 @@ FROM node:20-alpine AS base
 
 # Устанавливаем зависимости только при необходимости
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat curl
 WORKDIR /app
 
 # Копируем package.json и lock файл
@@ -36,7 +35,7 @@ RUN adduser --system --uid 1001 nextjs
 # Копируем публичную папку
 COPY --from=builder /app/public ./public
 
-# Автоматически используем standalone выход (нужно включить в next.config.js)
+# Автоматически используем standalone выход
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -45,7 +44,10 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT 3000
-# set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
+
+# Добавляем healthcheck чтобы Timeweb понял что это сервис
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/api/contact || exit 1
 
 CMD ["node", "server.js"]

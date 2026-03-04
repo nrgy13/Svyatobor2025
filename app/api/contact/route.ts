@@ -13,28 +13,25 @@ export type ContactFormData = {
   preferredTime?: string;
 };
 
+// Простой GET для проверки работоспособности API
+export async function GET() {
+  console.log('🔔 GET request to /api/contact received');
+  return NextResponse.json({ status: 'API is working', env_check: !!N8N_WEBHOOK_URL });
+}
+
 export async function POST(request: NextRequest) {
+  console.log('🔔 POST request to /api/contact received');
+  
   try {
     const body = await request.json();
+    console.log('📦 Request body:', JSON.stringify(body));
+
     const { name, phone, email, service, objectType, address, message, preferredTime }: ContactFormData = body;
 
     if (!name || !phone) {
+      console.log('⚠️ Validation error: missing name or phone');
       return NextResponse.json(
         { error: 'Имя и телефон обязательны для заполнения' },
-        { status: 400 }
-      );
-    }
-
-    if (name.length < 2) {
-      return NextResponse.json(
-        { error: 'Имя должно содержать не менее 2 символов' },
-        { status: 400 }
-      );
-    }
-
-    if (phone.length < 10) {
-      return NextResponse.json(
-        { error: 'Введите корректный номер телефона' },
         { status: 400 }
       );
     }
@@ -51,15 +48,17 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    console.log('📝 Отправка данных формы в n8n webhook:', payload);
+    console.log('📝 Sending payload to n8n:', payload);
 
     if (!N8N_WEBHOOK_URL) {
-      console.error('❌ Ошибка: NEXT_PUBLIC_N8N_WEBHOOK_URL не определен');
+      console.error('❌ Error: NEXT_PUBLIC_N8N_WEBHOOK_URL is missing');
       return NextResponse.json(
         { error: 'Ошибка конфигурации сервера. Пожалуйста, свяжитесь с администратором.' },
         { status: 500 }
       );
     }
+
+    console.log('🔗 Fetching:', N8N_WEBHOOK_URL);
 
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
@@ -71,14 +70,14 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ Ошибка отправки в n8n:', response.status, errorText);
+      console.error('❌ n8n Error:', response.status, errorText);
       return NextResponse.json(
         { error: 'Не удалось отправить заявку. Пожалуйста, попробуйте позже.' },
         { status: 500 }
       );
     }
 
-    console.log('✅ Заявка успешно отправлена в n8n');
+    console.log('✅ Success! Sent to n8n');
     
     return NextResponse.json(
       {
@@ -89,7 +88,7 @@ export async function POST(request: NextRequest) {
     );
 
   } catch (error) {
-    console.error('❌ Неожиданная ошибка при обработке формы:', error);
+    console.error('❌ Unexpected error in POST handler:', error);
     return NextResponse.json(
       { error: 'Произошла неожиданная ошибка. Пожалуйста, попробуйте позже.' },
       { status: 500 }
@@ -102,7 +101,7 @@ export async function OPTIONS() {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
