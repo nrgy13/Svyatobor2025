@@ -148,6 +148,7 @@ jobs:
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
           --exclude='.git' \
           --exclude='node_modules' \
+          --exclude='.next/cache' \
           . "$SSH_USER@$SSH_HOST:/var/www/html/"
 
     - name: 📤 Деплой PM2 конфигурации
