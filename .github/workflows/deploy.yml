@@ -57,7 +57,10 @@ jobs:
         echo "TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID" >> .env
 
     - name: 🏗️ Сборка приложения
-      run: npm run build
+      run: |
+        npm run build
+        echo "📂 Проверка собранных API роутов:"
+        ls -R .next/server/app/api || echo "API routes not found in build!"
 
     - name: 🔎 Валидация переменных окружения
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -167,8 +170,9 @@ jobs:
           echo "📤 Установка PM2..."
           npm install pm2
 
-          echo "🔄 Перезапуск приложения через PM2..."
-          npm exec pm2 -- reload ecosystem.config.js || npm exec pm2 -- start ecosystem.config.js
+          echo "🔄 Жесткий перезапуск приложения через PM2..."
+          npm exec pm2 -- delete svyatobor-landing || true
+          npm exec pm2 -- start ecosystem.config.js --update-env
 
           echo "💾 Сохранение конфигурации PM2..."
           npm exec pm2 -- save
