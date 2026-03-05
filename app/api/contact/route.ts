@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const N8N_WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+const N8N_AUTH_HEADER_NAME = process.env.N8N_AUTH_HEADER_NAME;
+const N8N_AUTH_HEADER_VALUE = process.env.N8N_AUTH_HEADER_VALUE;
 
 export type ContactFormData = {
   name: string;
@@ -60,11 +62,18 @@ export async function POST(request: NextRequest) {
 
     console.log('🔗 Fetching:', N8N_WEBHOOK_URL);
 
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (N8N_AUTH_HEADER_NAME && N8N_AUTH_HEADER_VALUE) {
+      console.log('🔑 Adding auth header:', N8N_AUTH_HEADER_NAME);
+      headers[N8N_AUTH_HEADER_NAME] = N8N_AUTH_HEADER_VALUE;
+    }
+
     const response = await fetch(N8N_WEBHOOK_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: JSON.stringify(payload),
     });
 

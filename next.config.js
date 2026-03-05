@@ -5,8 +5,16 @@ const nextConfig = {
   trailingSlash: false, // Явно отключаем
 
   experimental: {
-    serverActions: true, // Включаем, чтобы работали настройки serverActions
-    serverActionsBodySizeLimit: '2mb',
+    serverActions: {
+      allowedOrigins: [
+        'localhost:3000',
+        'xn--90ab0bbkbi7h.online',
+        'svyatobor.online',
+        'n8n.lex1case.ru'
+      ],
+      bodySizeLimit: '2mb',
+    },
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
   
   images: {
@@ -14,17 +22,12 @@ const nextConfig = {
     domains: ['localhost'],
     formats: ['image/webp', 'image/avif'],
   },
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-  },
-  // Оптимизация для статической сборки - убираем проблемные настройки
-  // generateBuildId: async () => {
-  //   return 'build-cache-' + Date.now()
-  // },
+
   // Уменьшение размера бандла
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  
   // Настройки для лучшей производительности сборки
   webpack: (config, { isServer }) => {
     // Оптимизация для клиентской сборки - упрощаем настройки
@@ -49,10 +52,7 @@ const nextConfig = {
 
     return config
   },
-  // Убираем потенциально проблемные настройки экспорта
-  // exportPathMap: async function (defaultPathMap) {
-  //   return defaultPathMap
-  // },
+
   async headers() {
     return [
       {
