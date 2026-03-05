@@ -22,16 +22,12 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  console.log('🔔 POST request to /api/contact received');
-  
   try {
     const body = await request.json();
-    console.log('📦 Request body:', JSON.stringify(body));
 
     const { name, phone, email, service, objectType, address, message, preferredTime }: ContactFormData = body;
 
     if (!name || !phone) {
-      console.log('⚠️ Validation error: missing name or phone');
       return NextResponse.json(
         { error: 'Имя и телефон обязательны для заполнения' },
         { status: 400 }
@@ -50,8 +46,6 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    console.log('📝 Sending payload to n8n:', payload);
-
     if (!N8N_WEBHOOK_URL) {
       console.error('❌ Error: NEXT_PUBLIC_N8N_WEBHOOK_URL is missing');
       return NextResponse.json(
@@ -60,14 +54,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('🔗 Fetching:', N8N_WEBHOOK_URL);
-
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
 
     if (N8N_AUTH_HEADER_NAME && N8N_AUTH_HEADER_VALUE) {
-      console.log('🔑 Adding auth header:', N8N_AUTH_HEADER_NAME);
       headers[N8N_AUTH_HEADER_NAME] = N8N_AUTH_HEADER_VALUE;
     }
 
@@ -86,8 +77,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('✅ Success! Sent to n8n');
-    
     return NextResponse.json(
       {
         success: true,
