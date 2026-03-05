@@ -15,7 +15,7 @@ export type ContactFormData = {
 
 // Простой GET для проверки работоспособности API
 export async function GET() {
-  console.log('🔔 GET request to /api/contact received');
+  console.log('🔔 [REBUILD CHECK] GET request to /api/contact received (v2)');
   return NextResponse.json({ status: 'API is working', env_check: !!N8N_WEBHOOK_URL });
 }
 

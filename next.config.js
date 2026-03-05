@@ -2,7 +2,9 @@
 const nextConfig = {
   // Используем standalone режим для деплоя в Docker/Node.js
   output: 'standalone',
-  trailingSlash: true,
+  trailingSlash: false, // Явно отключаем
+
+
   images: {
     unoptimized: true,
     domains: ['localhost'],
